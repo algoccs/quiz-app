@@ -90,6 +90,7 @@ def drop_tables():
     for table in tables:
         execute_query(f'DROP TABLE IF EXISTS {table};')
     close()
+    print('🥲')
 
 
 def create_links():
@@ -141,3 +142,30 @@ def fetch_data(sql, data=None):
 
     return result
 
+def get_next_question(question_id=0, quiz_id=1):
+    open()
+    query = '''
+        SELECT 
+            quiz_content.id,
+            question.question_name,
+            question.correct,
+            question.wrong1,
+            question.wrong2,
+            question.wrong3
+        FROM quiz_content JOIN question
+        ON quiz_content.question_id = question.id
+        WHERE quiz_content.id > ?
+        AND quiz_content.quiz_id = ?
+        ORDER BY quiz_content.id
+        LIMIT 1;'''
+    cursor.execute(query, [question_id, quiz_id])
+    result = cursor.fetchone()
+    close()
+    return result
+
+
+
+
+if __name__ == "__main__":
+    print(get_next_question(2, 1))
+    print('Base de datos estructurada correctamente')
