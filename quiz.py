@@ -1,13 +1,24 @@
-from flask import Flask, redirect, url_for, session
+from flask import Flask, redirect, url_for, session, request, render_template
 from database import get_next_question, get_quises
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SuperClaveSecreta'
 
-def index():
-    session['quiz'] = 1
+def start_quiz(quiz_id):
+    session['quiz'] = quiz_id
     session['prev_question'] = 0
-    return '<a href="/test">Click para iniciar el questionario!</a>'
+
+def end_quiz():
+    session.clear()
+
+def index():
+    if request.method == 'GET':
+        quises_list = get_quises()
+        return render_template('index.html', quises=quises_list)
+    else:
+        quiz = request.form.get('quiz')
+        start_quiz(quiz)
+        return redirect(url_for('test'))
 
 def test():
     result = get_next_question(session['prev_question'], session['quiz'])
@@ -20,7 +31,7 @@ def test():
 def result():
     return 'Aqui se muestra el resultado!'
 
-app.add_url_rule('/', 'index', index)
+app.add_url_rule('/', 'index', index, methods=['GET', 'POST'])
 app.add_url_rule('/test', 'test', test)
 app.add_url_rule('/result', 'result', result)
 
