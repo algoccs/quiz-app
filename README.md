@@ -1,2 +1,2 @@
 # quiz-app
-python pro II web project
+Jueves 6pm - Python Pro II WebDev project
