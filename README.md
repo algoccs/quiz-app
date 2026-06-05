@@ -1,8 +1,69 @@
-# 📝 Quiz App - Flask Project
+# 🧠 Quiz App — Sistema de Cuestionarios Dinámicos
 
-Este es un proyecto de aplicación de cuestionarios (Quiz) desarrollado en Python utilizando el framework **Flask**. El proyecto está estructurado siguiendo las buenas prácticas de la industria, utilizando un entorno virtual aislado para gestionar las dependencias de forma segura sin alterar el sistema operativo.
+¡Bienvenido al repositorio de **Quiz App**! Esta es una aplicación web *full-stack* robusta, interactiva y de enfoque educativo diseñada para servir como una herramienta pedagógica en el aula. A través de este proyecto, los estudiantes pueden asimilar conceptos fundamentales del desarrollo de software moderno: la **arquitectura cliente-servidor**, la gestión y diseño de **bases de datos relacionales con SQL/SQLite**, y el renderizado dinámico en el servidor mediante el **sistema de plantillas Jinja2 con Flask**.
 
 ---
+
+## 🚀 Arquitectura y Características Principales
+
+El proyecto implementa una arquitectura modular bien definida para separar las responsabilidades del frontend, el backend y la persistencia de datos:
+
+### 🌐 Backend y Servidor Web (`app.py`)
+* **Controlador Central:** Gestiona el ciclo de vida de las peticiones HTTP (`GET` y `POST`).
+* **Enrutamiento Dinámico:** Define las rutas principales de la aplicación web:
+  * ` / `: Pantalla de bienvenida e inicio del cuestionario.
+  * `/test`: Renderizado dinámico de preguntas y captura de respuestas en tiempo real.
+  * `/results`: Procesamiento y visualización del puntaje final obtenido por el usuario.
+* **Inyección de Contexto:** Extrae la información desde la capa de persistencia y la expone de manera segura al motor de plantillas.
+
+### 💾 Persistencia y Base de Datos SQL (`database.py`)
+* **Motor Integrado:** Utiliza **SQLite**, eliminando la necesidad de configurar servidores de base de datos complejos y permitiendo un almacenamiento local ligero en un único archivo.
+* **Modelo de Datos Eficiente:** Tablas estructuradas de forma relacional para almacenar de manera independiente las preguntas, las opciones de respuesta y las claves de corrección.
+* **Consultas SQL Puras:** Diseñado didácticamente con sentencias SQL nativas (`CREATE TABLE`, `INSERT INTO`, `SELECT`) para que los alumnos dominen la sintaxis estándar del lenguaje.
+
+### 🎨 Frontend Basado en Plantillas (`templates/` & `static/`)
+* **Herencia de Plantillas (Jinja2):** Se utiliza `base.html` como la plantilla maestra que define la estructura global (HTML5, metadatos, barra de navegación y pie de página). Las vistas secundarias heredan este esqueleto mediante bloques de contenido dinámico:
+  * `test.html`: Estructura adaptativa para desplegar secuencialmente el banco de preguntas.
+  * `results.html`: Tarjeta de puntuación final con retroalimentación inmediata.
+* **Aislamiento de Estilos y Comportamiento:** Los estilos responsivos se unifican en `static/css/style.css`.
+
+---
+
+## 📂 Estructura del Proyecto
+
+La disposición de los archivos sigue estrictamente las convenciones de diseño de aplicaciones Flask:
+
+```text
+quiz-app/
+│
+├── templates/               # Capa de Vistas: Plantillas HTML dinámicas (Jinja2)
+│   ├── base.html            # Layout maestro (Esqueleto base de la interfaz)
+│   ├── test.html            # Contenedor dinámico del cuestionario
+│   └── results.html         # Pantalla modular de resultados y feedback
+│
+├── static/                  # Capa de Recursos Estáticos
+│   ├── css/
+│   │   └── style.css        # Hoja de estilos general y componentes responsivos
+│
+├── app.py                   # Capa de Control: Servidor Flask y lógica de negocio
+├── database.py              # Capa de Modelo: Inicialización, semillas y consultas SQL
+│
+└── README.md                # Documentación oficial del proyecto
+```
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+| Componente | Tecnología | Descripción |
+| :--- | :--- | :--- |
+| **Backend** | Python 3.x / Flask | Servidor web ágil, microframework de enrutamiento. |
+| **Base de Datos** | SQL / SQLite3 | Persistencia relacional local mediante consultas estructuradas. |
+| **Vistas** | HTML5 / Jinja2 | Renderizado dinámico y modular por herencia de bloques. |
+| **Diseño** | CSS3 Moderno | Interfaz limpia, responsiva y adaptable a dispositivos móviles. |
+
+---
+
 
 ## 🚀 Guía de Configuración y Despliegue
 
@@ -31,6 +92,7 @@ echo "venv/" > .gitignore
 *   **`.gitignore`**: Archivo oculto especial que lee Git para saber qué archivos o carpetas debe excluir del repositorio.
 
 ---
+
 
 ## 🛠️ Cómo Replicar este Proyecto en otra Computadora
 
@@ -63,6 +125,7 @@ pip install -r requirements.txt
 
 ---
 
+
 ## 🔄 Flujo de Trabajo Diario
 
 Cada vez que regreses a trabajar en este proyecto en el futuro, el orden correcto de comandos es:
@@ -71,3 +134,28 @@ Cada vez que regreses a trabajar en este proyecto en el futuro, el orden correct
 2. **Activar el entorno**: `source venv/bin/activate` (Verás el indicador `(venv)` al inicio de la línea de comandos).
 3. **Ejecutar la aplicación**: `python app.py` (o el nombre de tu archivo principal).
 4. **Salir del entorno** (opcional): Al terminar de programar, puedes escribir `deactivate` para volver al Python global de tu sistema.
+
+---
+
+
+## 📝 Guía Metodológica y Ejercicios para Clase
+
+Este proyecto está meticulosamente diseñado para guiar clases prácticas de programación. Aquí se proponen tres laboratorios de aprendizaje:
+
+> 💡 **Laboratorio 1: El Poder de SQL (`database.py`)**
+> 
+> Pide a los alumnos que exploren el archivo de la base de datos. Como ejercicio, deben **modificar las sentencias de inserción** para añadir un nuevo bloque de preguntas sobre un tema diferente y verificar cómo impacta en las tablas relacionales empleando sentencias `SELECT`.
+
+> 💡 **Laboratorio 2: Ciclo de Petición HTTP (`app.py`)**
+> 
+> Analizar cómo viajan los datos desde el cliente hacia el servidor. Los estudiantes pueden **rastrear el método `POST`** implementado al enviar el cuestionario, entendiendo cómo Flask recibe los parámetros, calcula el puntaje y redirige de manera segura al endpoint de resultados.
+
+> 💡 **Laboratorio 3: Modularización de Vistas (`templates/`)**
+> 
+> Estudiar la herencia de plantillas Jinja2. Desafía a los estudiantes a **modificar la barra de navegación en `base.html`** para observar cómo el cambio se propaga instantáneamente en `quiz.html` y `results.html` sin tocar una sola línea de código en esas páginas secundarias.
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la protección de la Licencia MIT. Eres libre de usarlo, modificarlo y distribuirlo con fines educativos en el aula.
+
