@@ -1,5 +1,6 @@
 import sqlite3
-DB = 'quises.sqlite3'
+
+DB = "quises.sqlite"
 conn = None
 cursor = None
 
@@ -8,7 +9,7 @@ def open():
     global conn, cursor
     conn = sqlite3.connect(DB)
     cursor = conn.cursor()
-    # CONFIGURACION ADICIONAL
+    # parametros de config de la db
     cursor.execute('PRAGMA foreign_keys=on')
 
 
@@ -23,188 +24,175 @@ def execute_query(query):
 
 
 def create_tables():
-    queries = [
+    tables = [
         '''CREATE TABLE IF NOT EXISTS quiz (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL);''',
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL);''',
 
         '''CREATE TABLE IF NOT EXISTS question (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            question_name TEXT NOT NULL,
-            correct VARCHAR (100) NOT NULL,
-            wrong1 VARCHAR (100) NOT NULL,
-            wrong2 VARCHAR (100) NOT NULL,
-            wrong3 VARCHAR (100) NOT NULL);''',
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    question_name TEXT NOT NULL,
+    correct VARCHAR(100) NOT NULL,
+    wrong_1 VARCHAR(10) NOT NULL,
+    wrong_2 VARCHAR(10) NOT NULL,
+    wrong_3 VARCHAR(10) NOT NULL);''',
 
         '''CREATE TABLE IF NOT EXISTS quiz_content (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            quiz_id INTEGER NOT NULL,
-            question_id INTEGER NOT NULL,
-            FOREIGN KEY (quiz_id) REFERENCES quiz(id) ON DELETE CASCADE,
-            FOREIGN KEY (question_id) REFERENCES question (id) ON DELETE CASCADE);'''
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    quiz_id INTEGER NOT NULL,
+    question_id INTEGER NOT NULL,
+    FOREIGN KEY (quiz_id) REFERENCES quiz (id) ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES question (id) ON DELETE CASCADE);'''
     ]
 
     open()
-    for q in queries:
-        execute_query(q)
+    for sql in tables:
+        execute_query(sql)
     close()
+    print('Tablas creadas exitosamente')
 
 
 def add_quises():
     quizes = [
         ('Propio juego', ),
         ('¿Quién quiere ser millonario?', ),
-        ('El más inteligente', )
-    ]
+        ('El más inteligente', )]
+
     open()
     cursor.executemany('INSERT INTO quiz (name) VALUES (?);', quizes)
     conn.commit()
     close()
+    print('Se ingresaron los datos de la tabla quiz!')
 
 
 def add_questions():
     questions = [
-    ('¿En qué año se lanzó la consola original Nintendo Entertainment System (NES) en Norteamérica?',
-     '1985', '1983', '1987', '1989'),
-    ('¿Cuál es el nombre del protagonista principal de la saga de videojuegos "The Legend of Zelda"?',
-     'Link', 'Zelda', 'Ganon', 'Epona'),
-    ('¿Qué videojuego actual es considerado el más vendido de la historia?',
-     'Minecraft', 'Grand Theft Auto V', 'Tetris', 'Wii Sports'),
-    ('¿Cuál era el nombre original de Mario en su primera aparición en el juego Donkey Kong de 1981?',
-     'Jumpman', 'Mr. Video', 'Plumber', 'Luigi'),
-    ('¿En qué juego actual de 2022 exploras un mundo postapocalíptico controlando a un gato callejero?',
-     'Stray', 'Cat Quest', 'Little Kitty, Big City', 'Night in the Woods'),
-    ('¿Qué consola retro de SEGA fue la principal competidora de la Super Nintendo (SNES)?',
-     'SEGA Genesis / Mega Drive', 'SEGA Master System', 'SEGA Dreamcast', 'SEGA Saturn'),
-    ('¿Cómo se llama la inteligencia artificial que acompaña al Jefe Maestro en la saga Halo?',
-     'Cortana', 'Serina', 'Isabel', 'The Weapon'),
-    ('¿Qué fruta debe recolectar Crash Bandicoot en sus juegos clásicos y modernos?',
-     'Fruta Wumpa', 'Manzana', 'Durazno', 'Mango'),
-    ('¿Cuál de los siguientes juegos populares pertenece al género "Battle Royale"?',
-     'Fortnite', 'Overwatch 2', 'Valorant', 'League of Legends'),
-    ('¿En cuál videojuego retro de arcade debías evitar a los fantasmas Blinky, Pinky, Inky y Clyde?',
-     'Pac-Man', 'Space Invaders', 'Galaga', 'Dig Dug'),
-    ('¿Qué estudio de desarrollo creó el aclamado juego de rol de 2023 "Baldur\'s Gate 3"?',
-     'Larian Studios', 'CD Projekt Red', 'BioWare', 'Bethesda Game Studios'),
-    ('¿Cuál es el nombre del reino digital donde se desarrollan las partidas de League of Legends?',
-     'Runaterra', 'Azeroth', 'Santuario', 'Tamriel'),
-    ('¿Qué consola de sobremesa de la quinta generación utilizaba cartuchos en lugar de CD-ROM?',
-     'Nintendo 64', 'PlayStation', 'SEGA Saturn', 'Atari Jaguar'),
-    ('¿Quién es el creador de la famosa franquicia Metal Gear y el juego moderno Death Stranding?',
-     'Hideo Kojima', 'Shigeru Miyamoto', 'Hidetaka Miyazaki', 'Shinji Mikami'),
-    ('¿Qué juego indie de 2018 destaca por su alta dificultad en plataformas y su historia sobre salud mental?',
-     'Celeste', 'Hollow Knight', 'Dead Cells', 'Ori and the Blind Forest'),
-    ('¿Qué mítico RPG de 1997 para PlayStation incluía a personajes como Cloud Strife y Sephiroth?',
-     'Final Fantasy VII', 'Chrono Cross', 'Xenogears', 'Vagrant Story'),
-    ('¿Cuál es el nombre de la región de mundo abierto donde transcurre la historia de Grand Theft Auto V?',
-     'Los Santos', 'Liberty City', 'Vice City', 'San Fierro'),
-    ('¿Qué periférico de la consola NES te permitía jugar al título "Duck Hunt"?',
-     'NES Zapper', 'Power Glove', 'NES Advantage', 'R.O.B.'),
-    ('¿Qué juego de software actual desarrollado por FromSoftware ganó el premio al Juego del Año (GOTY) en 2022?',
-     'Elden Ring', 'Dark Souls III', 'Bloodborne', 'Sekiro: Shadows Die Twice'),
-    ('¿Cuál es el nombre de la corporación farmacéutica enemiga principal en la saga Resident Evil?',
-     'Umbrella Corporation', 'Aperture Science', 'Abstergo Industries', 'Vault-Tec')
-]
+        ('¿Cuántos meses en un año tienen 28 días?',
+         'Todos', 'Uno', 'Ninguno', 'Dos'),
+        ('¿Qué aspecto tendrá el acantilado verde si se cae en el Mar Rojo?',
+         'Mojado', 'Rojo', 'No cambiará', 'Púrpura'),
+        ('¿Con qué mano es mejor mezclar el té?',
+         'Con una cuchara', 'Derecha', 'Izquierda', 'Cualquiera'),
+        ('¿Qué no tiene longitud, profundidad, ancho, o altura pero puede medirse?',
+         'Tiempo', 'Estupidez', 'El mar', 'Aire'),
+        ('¿Cuándo es posible sacar agua con una red?', 'Cuando el agua está congelada',
+         'Cuando no hay peces', 'Cuando los peces de colores nadan lejos', 'Cuando la red se rompe'),
+        ('¿Qué es más grande que un elefante y no pesa nada?',
+         'La sombra de un elefante', 'Un globo', 'Un paracaídas', 'Una nube')
+    ]
     open()
-    cursor.executemany('''INSERT INTO question (question_name, correct,         wrong1, wrong2, wrong3)
-    VALUES (?, ?, ?, ?, ?);''', questions)
+    cursor.executemany('''INSERT INTO question
+    (question_name, correct, wrong_1, wrong_2, wrong_3)
+    VALUES (?,?, ?, ?, ?);''', questions)
     conn.commit()
     close()
+    print('Se ingresaron los datos de la tabla!')
 
 
-def drop_tables():
-    open()
-    tables = ['quiz_content', 'quiz', 'question']
-    for table in tables:
-        execute_query(f'DROP TABLE IF EXISTS {table};')
-    close()
-    print('🥲')
-
-
-def create_links():
+def add_links():  # ESTRUCTURAR CUESTIONARIOS
     links = []
-    link = input('Quieres crear un link? (y/n): ')
 
+    link = input('Desea ingresar un enlace? (y/n): ')
     while link.lower() == 'y':
         quiz_id = int(input('ID del quiz: '))
         question_id = int(input('ID de la pregunta: '))
 
         links.append((quiz_id, question_id))
-        link = input('Desea agregar otro link? (y/n): ')
+        link = input('Desea ingresar otro? (y/n): ')
 
     if links:
-        query = '''INSERT INTO quiz_content (quiz_id, question_id) VALUES (?, ?)'''
-
         open()
-        cursor.executemany(query, links)
+        cursor.executemany(
+            'INSERT INTO quiz_content (quiz_id, question_id) VALUES (?, ?);', links)
         conn.commit()
         close()
 
 
-def show_tables():
+def destroy_db():
     tables = ['quiz_content', 'quiz', 'question']
     open()
     for table in tables:
-        print(f'=== TABLA: {table.upper()} ===')
-        try:
-            cursor.execute(f'SELECT * FROM {table}')
-            result = cursor.fetchall()
+        execute_query(f'DROP TABLE IF EXISTS {table};')
+    close()
+    print('😂')
 
-            for i in result:
-                print(i)
+
+def show_tables():
+    tables = ['quiz', 'question', 'quiz_content']
+    open()
+
+    for table in tables:
+        print(f'=== TABLA: {table} ===')
+        try:
+            cursor.execute(f'SELECT * FROM {table};')
+            data = cursor.fetchall()
+
+            if not data:
+                print('La tabla esta vacia.')
+            else:
+                for reg in data:
+                    print(reg)
 
         except sqlite3.DatabaseError as error:
-            print('SE ENCONTRO EL SIGUIENTE ERROR:', error)
-
+            print('Error:', error)
     close()
 
-
-def fetch_data(sql, data=None):
-    open()
-    if data:
-        cursor.execute(sql, data)
-    else:
-        cursor.execute(sql)
-    result = cursor.fetchall()
-    close()
-
-    return result
 
 def get_next_question(question_id=0, quiz_id=1):
     open()
+
     query = '''
-        SELECT 
+        SELECT
             quiz_content.id,
             question.question_name,
             question.correct,
-            question.wrong1,
-            question.wrong2,
-            question.wrong3
-        FROM quiz_content JOIN question
-        ON quiz_content.question_id = question.id
+            question.wrong_1,
+            question.wrong_2,
+            question.wrong_3
+        FROM quiz_content
+        JOIN question ON quiz_content.question_id = question.id
         WHERE quiz_content.id > ?
         AND quiz_content.quiz_id = ?
         ORDER BY quiz_content.id
-        LIMIT 1;'''
+        LIMIT 1'''
+
     cursor.execute(query, [question_id, quiz_id])
     result = cursor.fetchone()
     close()
     return result
 
+
+# def show(table):
+#     query = 'SELECT * FROM ' + table
+#     open()
+#     cursor.execute(query)
+#     print(cursor.fetchall())
+#     close()
+
+
+# def show_tables():
+#     show('question')
+#     show('quiz')
+#     show('quiz_content')
+
+
 def get_quises():
     open()
-    cursor.execute('SELECT * FROM quiz ORDER BY id;')
+    cursor.execute('SELECT id, name FROM quiz ORDER BY id;')
     result = cursor.fetchall()
     close()
     return result
 
 def run():
-    drop_tables()
+    destroy_db()
     create_tables()
     add_questions()
     add_quises()
     show_tables()
 
+def set_quiz():
+    show_tables()
+    add_links()
 
 if __name__ == "__main__":
-    print('Base de datos estructurada correctamente')
+    set_quiz()
