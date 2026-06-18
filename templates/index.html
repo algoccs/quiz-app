@@ -10,11 +10,13 @@
 </head>
 
 <body>
-    <h1>Bienvenido a Quizt</h1>
-    <h2>Seleccione un cuestionario:</h2>
+    <div class="header">
+        <h1 class="titulo">Bienvenido a Quizt</h1>
+        <h2>Seleccione un cuestionario:</h2>
+    </div>
 
-    <form action="{{ url_for('index') }}" method="post">
-        <select name="quiz">
+    <form class="form" action="{{ url_for('index') }}" method="post">
+        <select class="form-select" name="quiz">
             {% for id, name in quises %}
             <option value="{{ id }}">{{ name }}</option>
             {% endfor %}
